@@ -9,7 +9,11 @@ class BaseEquipmentComponent {
     pins: BaseEquipmentPin[];
 }
 
-export class CreateBaseEquipmentDto {
+class BaseEquipmentArduino {
     description: string;
     components: BaseEquipmentComponent[];
+}
+export class CreateBaseEquipmentDto {
+    description: string;
+    arduinos: BaseEquipmentArduino[];
 }

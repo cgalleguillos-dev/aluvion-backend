@@ -7,6 +7,7 @@ import { ComponentModule } from './modules/component/component.module';
 import { SimulationModule } from './modules/simulation/simulation.module';
 import { BaseEquipmentModule } from './modules/base-equipment/base-equipment.module';
 import { PinModule } from './modules/pin/pin.module';
+import { ArduinoModule } from './modules/arduino/arduino.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { PinModule } from './modules/pin/pin.module';
     ComponentModule,
     SimulationModule,
     BaseEquipmentModule,
-    PinModule
+    PinModule,
+    ArduinoModule
   ],
 })
 export class AppModule { }
