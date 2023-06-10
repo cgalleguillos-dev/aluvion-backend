@@ -3,8 +3,7 @@ import { CreateBaseEquipmentDto } from './dto/create-base-equipment.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseEquipment } from '../../entities';
-import { ComponentService } from '../component/component.service';
-import { PinService } from '../pin/pin.service';
+import { ArduinoService } from '../arduino/arduino.service';
 
 @Injectable()
 export class BaseEquipmentService {
@@ -12,20 +11,19 @@ export class BaseEquipmentService {
   constructor(
     @InjectRepository(BaseEquipment)
     private baseEquipmentRepository: Repository<BaseEquipment>,
-    private componentService: ComponentService,
-
+    private arduinoService: ArduinoService
   ) { }
 
   async create(createBaseEquipmentDto: CreateBaseEquipmentDto) {
-    const { description, components } = createBaseEquipmentDto;
+    const { description, arduinos } = createBaseEquipmentDto;
     const baseEquipment = this.baseEquipmentRepository.create({ description });
-    const newComponents = await Promise.all(components.map(async component => {
-      const componentEntity = await this.componentService.create(component);
-      return componentEntity;
-    }));
+    const arduinosEntity = await Promise.all(arduinos.map(async arduino => {
+      const arduinoEntity = await this.arduinoService.create(arduino);
+      return arduinoEntity;
+    }
+    ));
 
-    baseEquipment.components = newComponents;
-
+    baseEquipment.arduinos = arduinosEntity;
     return await this.baseEquipmentRepository.save(baseEquipment);
   }
 
@@ -40,7 +38,7 @@ export class BaseEquipmentService {
 
   async findAll() {
     return await this.baseEquipmentRepository.find({
-      relations: ['components', 'components.pins']
+      relations: ['arduinos', 'arduinos.components', 'arduinos.components.pins']
     });
   }
 
@@ -51,4 +49,5 @@ export class BaseEquipmentService {
   remove(id: number) {
     return `This action removes a #${id} baseEquipment`;
   }
+
 }

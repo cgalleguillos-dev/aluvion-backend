@@ -4,3 +4,4 @@ export { Pin } from './pin.entity';
 export { Simulation } from './simulation.entity';
 export { Equipment } from './equipment.entity';
 export { Event } from './event.entity';
+export { Arduino } from './arduino.entity';
