@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Equipment, BaseEquipment, Component, Event, Pin, Simulation } from "../entities";
+import { Equipment, BaseEquipment, Component, Event, Pin, Simulation, Arduino } from "../entities";
 import { ConfigModule } from "@nestjs/config";
 
 ConfigModule.forRoot({
@@ -19,7 +19,8 @@ const DatabaseOptions: DataSourceOptions = {
         Component,
         Event,
         Pin,
-        Simulation
+        Simulation,
+        Arduino
     ],
     synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
     logging: process.env.TYPEORM_LOGGING === 'true',
@@ -36,7 +37,8 @@ const TestDatabaseOptions: DataSourceOptions = {
         Component,
         Event,
         Pin,
-        Simulation
+        Simulation,
+        Arduino
     ],
     synchronize: true,
     logging: false,
