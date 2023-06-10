@@ -1,0 +1,27 @@
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - aluvion-db
+    ports:
+      - "3005:3005"
+    networks:
+      - app-network
+  aluvion-db:
+    image: postgres
+    container_name: aluvion-db
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=-V4c3x2z1
+      - POSTGRES_DB=aluviondb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
