@@ -5,3 +5,5 @@ export { Simulation } from './simulation.entity';
 export { Equipment } from './equipment.entity';
 export { Event } from './event.entity';
 export { Arduino } from './arduino.entity';
+export { TypeComponent } from './type-component.entity';
+export { ComposeComponent } from './compose-component.entity';
