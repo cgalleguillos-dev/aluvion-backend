@@ -1,1 +1,5 @@
-export class CreateEquipmentDto {}
+export class CreateEquipmentDto {
+    description: string;
+    baseEquipmentId: string;
+    composeComponentIds: string[];
+}
