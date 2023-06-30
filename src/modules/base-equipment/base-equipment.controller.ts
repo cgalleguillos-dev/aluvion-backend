@@ -22,13 +22,13 @@ export class BaseEquipmentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.baseEquipmentService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.baseEquipmentService.findOne(id);
   }
 
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.baseEquipmentService.remove(+id);
+    return this.baseEquipmentService.remove(id);
   }
 }

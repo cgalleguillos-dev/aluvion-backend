@@ -8,6 +8,7 @@ import { ArduinoModule } from '../arduino/arduino.module';
 @Module({
   imports: [TypeOrmModule.forFeature([BaseEquipment]), ArduinoModule],
   controllers: [BaseEquipmentController],
-  providers: [BaseEquipmentService]
+  providers: [BaseEquipmentService],
+  exports: [BaseEquipmentService]
 })
 export class BaseEquipmentModule { }

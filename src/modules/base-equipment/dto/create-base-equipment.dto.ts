@@ -7,6 +7,8 @@ class BaseEquipmentPin {
 class BaseEquipmentComponent {
     description: string;
     pins: BaseEquipmentPin[];
+    typeComponent: string;
+    components?: BaseEquipmentComponent[];
 }
 
 class BaseEquipmentArduino {
