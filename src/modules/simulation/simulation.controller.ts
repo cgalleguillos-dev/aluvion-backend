@@ -5,21 +5,26 @@ import { UpdateSimulationDto } from './dto/update-simulation.dto';
 
 @Controller('simulation')
 export class SimulationController {
-  constructor(private readonly simulationService: SimulationService) {}
+  constructor(private readonly simulationService: SimulationService) { }
 
   @Post()
-  create(@Body() createSimulationDto: CreateSimulationDto) {
-    return this.simulationService.create(createSimulationDto);
+  async create(@Body() createSimulationDto: CreateSimulationDto) {
+    return await this.simulationService.create(createSimulationDto);
   }
 
   @Get()
-  findAll() {
-    return this.simulationService.findAll();
+  async findAll() {
+    return await this.simulationService.findAll();
+  }
+
+  @Get(':id/execute')
+  async execute(@Param('id') id: string) {
+    return await this.simulationService.execute(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.simulationService.findOne(+id);
+    return this.simulationService.findOne(id);
   }
 
   @Patch(':id')
