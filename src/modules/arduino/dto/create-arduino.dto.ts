@@ -6,7 +6,9 @@ class CreateArduinoPinDto {
 
 class CreateArduinoComponentDto {
     description: string;
+    typeComponent: string;
     pins: CreateArduinoPinDto[];
+    components?: CreateArduinoComponentDto[];
 }
 export class CreateArduinoDto {
     description: string;

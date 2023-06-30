@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Arduino } from '../../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ComponentService } from '../component/component.service';
+import { ComposeComponentService } from '../compose-component/compose-component.service';
 
 @Injectable()
 export class ArduinoService {
@@ -12,21 +13,36 @@ export class ArduinoService {
   constructor(
     @InjectRepository(Arduino) private arduinoRepository: Repository<Arduino>,
     private componentService: ComponentService,
+    private composeComponent: ComposeComponentService
   ) { }
   async create(createArduinoDto: CreateArduinoDto) {
     const { description, components } = createArduinoDto;
     const arduino = this.arduinoRepository.create({ description });
-    const componentsEntity = await Promise.all(components.map(async component => {
-      const componentEntity = await this.componentService.create(component);
-      return componentEntity;
-    }));
-    arduino.components = componentsEntity;
+    if (components) {
+      const componentsEntity = await Promise.all(components.map(async component => {
+        if (!component.components?.length) {
+          const componentEntity = await this.componentService.create(component);
+          return componentEntity;
+        }
+      }
+      ));
+      arduino.components = componentsEntity;
+      const composeComponentsEntity = await Promise.all(components.map(async component => {
+        if (component.components?.length) {
+          const composeComponentEntity = await this.composeComponent.create(component);
+          return composeComponentEntity;
+        }
+      }
+      ));
+      arduino.composeComponents = composeComponentsEntity;
+    }
+
     return await this.arduinoRepository.save(arduino);
   }
 
   async findAll() {
     return await this.arduinoRepository.find({
-      relations: ['components', 'components.pins']
+      relations: ['components', 'components.pins', 'components.components', 'components.components.pins']
     });
   }
 
