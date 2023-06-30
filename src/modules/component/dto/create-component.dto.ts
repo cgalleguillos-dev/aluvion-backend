@@ -1,5 +1,3 @@
-import { Pin } from "src/entities";
-
 class CreateComponentPinDto {
     comunicationType: string;
     signalType: string;
@@ -8,5 +6,6 @@ class CreateComponentPinDto {
 
 export class CreateComponentDto {
     description: string;
+    typeComponent: string;
     pins: CreateComponentPinDto[];
 }
