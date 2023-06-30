@@ -1,29 +1,45 @@
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Equipment, BaseEquipment, Component, Event, Pin, Simulation, Arduino } from "../entities";
+import { ComposeComponent, Equipment, BaseEquipment, Component, Event, Pin, Simulation, Arduino, TypeComponent } from "../entities";
 import { ConfigModule } from "@nestjs/config";
-
 ConfigModule.forRoot({
     envFilePath: ['.env', '.env.local'],
     isGlobal: true,
 })
-const DatabaseOptions: DataSourceOptions = {
-    type: process.env.TYPEORM_CONNECTION as any,
-    host: process.env.TYPEORM_HOST,
-    port: parseInt(process.env.TYPEORM_PORT, 10),
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE,
-    entities: [
-        Equipment,
-        BaseEquipment,
-        Component,
-        Event,
-        Pin,
-        Simulation,
-        Arduino
-    ],
-    synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
-    logging: process.env.TYPEORM_LOGGING === 'true',
+
+const entities = [
+    Equipment,
+    BaseEquipment,
+    Component,
+    Event,
+    Pin,
+    Simulation,
+    Arduino,
+    TypeComponent,
+    ComposeComponent,
+]
+
+const DockerDatabaseOptions: DataSourceOptions = {
+    type: process.env.DOCKER_TYPEORM_CONNECTION as any,
+    host: process.env.DOCKER_TYPEORM_HOST,
+    port: parseInt(process.env.DOCKER_TYPEORM_PORT, 10),
+    username: process.env.DOCKER_TYPEORM_USERNAME,
+    password: process.env.DOCKER_TYPEORM_PASSWORD,
+    database: process.env.DOCKER_TYPEORM_DATABASE,
+    entities: entities,
+    synchronize: process.env.DOCKER_TYPEORM_SYNCHRONIZE === 'true',
+    logging: process.env.DOCKER_TYPEORM_LOGGING === 'true',
+    migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+}
+const DevDatabaseOptions: DataSourceOptions = {
+    type: process.env.DEV_TYPEORM_CONNECTION as any,
+    host: process.env.DEV_TYPEORM_HOST,
+    port: parseInt(process.env.DEV_TYPEORM_PORT, 10),
+    username: process.env.DEV_TYPEORM_USERNAME,
+    password: process.env.DEV_TYPEORM_PASSWORD,
+    database: process.env.DEV_TYPEORM_DATABASE,
+    entities: entities,
+    synchronize: process.env.DEV_TYPEORM_SYNCHRONIZE === 'true',
+    logging: process.env.DEV_TYPEORM_LOGGING === 'true',
     migrations: [__dirname + '/../migrations/*{.ts,.js}'],
 }
 
@@ -31,15 +47,7 @@ const TestDatabaseOptions: DataSourceOptions = {
     type: 'sqlite',
     database: ':memory:',
     dropSchema: true,
-    entities: [
-        Equipment,
-        BaseEquipment,
-        Component,
-        Event,
-        Pin,
-        Simulation,
-        Arduino
-    ],
+    entities: entities,
     synchronize: true,
     logging: false,
     migrations: [__dirname + '/../migrations/*{.ts,.js}'],
@@ -53,10 +61,12 @@ class DataSourceFactory {
         switch (nodeEnv) {
             case 'test':
                 return TestDatabaseOptions;
-            case 'development':
-                return DatabaseOptions;
+            case 'dev':
+                return DevDatabaseOptions;
+            case 'docker':
+                return DockerDatabaseOptions;
             default:
-                return DatabaseOptions;
+                return DevDatabaseOptions;
         }
     }
 }

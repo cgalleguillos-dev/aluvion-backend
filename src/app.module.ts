@@ -8,6 +8,9 @@ import { SimulationModule } from './modules/simulation/simulation.module';
 import { BaseEquipmentModule } from './modules/base-equipment/base-equipment.module';
 import { PinModule } from './modules/pin/pin.module';
 import { ArduinoModule } from './modules/arduino/arduino.module';
+import { TypeComponentModule } from './modules/type-component/type-component.module';
+import { ComposeComponentModule } from './modules/compose-component/compose-component.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
   imports: [
@@ -23,7 +26,10 @@ import { ArduinoModule } from './modules/arduino/arduino.module';
     SimulationModule,
     BaseEquipmentModule,
     PinModule,
-    ArduinoModule
+    ArduinoModule,
+    TypeComponentModule,
+    ComposeComponentModule,
+    EventModule
   ],
 })
 export class AppModule { }

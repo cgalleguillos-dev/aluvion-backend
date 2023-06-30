@@ -10,4 +10,3 @@ docker-compose.yml
 package-lock.json
 README.md
 docs
-.env

@@ -27,6 +27,8 @@ export class BaseEquipmentService {
     return await this.baseEquipmentRepository.save(baseEquipment);
   }
 
+
+
   async createBulk(createBaseEquipmentDto: CreateBaseEquipmentDto[]) {
     const baseEquipments = await Promise.all(createBaseEquipmentDto.map(async baseEquipment => {
       const baseEquipmentEntity = await this.create(baseEquipment);
@@ -38,15 +40,21 @@ export class BaseEquipmentService {
 
   async findAll() {
     return await this.baseEquipmentRepository.find({
-      relations: ['arduinos', 'arduinos.components', 'arduinos.components.pins']
+      relations: ['arduinos', 'arduinos.components', 'arduinos.components.typeComponent',
+        'arduinos.components.pins', 'arduinos.composeComponents', 'arduinos.composeComponents.typeComponent',
+        'arduinos.composeComponents.pins', 'arduinos.composeComponents.components',
+      ]
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} baseEquipment`;
+  async findOne(id: string) {
+    return await this.baseEquipmentRepository.findOne({
+      where: { id },
+    }
+    );
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} baseEquipment`;
   }
 
