@@ -11,6 +11,8 @@ import { ArduinoModule } from './modules/arduino/arduino.module';
 import { TypeComponentModule } from './modules/type-component/type-component.module';
 import { ComposeComponentModule } from './modules/compose-component/compose-component.module';
 import { EventModule } from './modules/event/event.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { EventModule } from './modules/event/event.module';
     ArduinoModule,
     TypeComponentModule,
     ComposeComponentModule,
-    EventModule
+    EventModule,
+    AuthModule,
+    UsersModule
   ],
 })
 export class AppModule { }
