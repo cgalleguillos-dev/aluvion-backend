@@ -3,14 +3,14 @@ services:
   app:
     build: .
     depends_on:
-      - aluvion-db
+      - aluvion_db
     ports:
       - "3005:3005"
     networks:
       - app-network
-  aluvion-db:
+  aluvion_db:
     image: postgres
-    container_name: aluvion-db
+    container_name: aluvion_db
     restart: always
     ports:
       - "5433:5432"
