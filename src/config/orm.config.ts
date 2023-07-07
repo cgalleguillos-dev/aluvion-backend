@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from "typeorm";
-import { ComposeComponent, Equipment, BaseEquipment, Component, Event, Pin, Simulation, Arduino, TypeComponent } from "../entities";
+import { ComposeComponent, Equipment, BaseEquipment, Component, Event, Pin, Simulation, Arduino, TypeComponent, User } from "../entities";
 import { ConfigModule } from "@nestjs/config";
 ConfigModule.forRoot({
     envFilePath: ['.env', '.env.local'],
@@ -16,6 +16,7 @@ const entities = [
     Arduino,
     TypeComponent,
     ComposeComponent,
+    User
 ]
 
 const DockerDatabaseOptions: DataSourceOptions = {
