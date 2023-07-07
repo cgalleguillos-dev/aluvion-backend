@@ -15,17 +15,17 @@ export class EventService {
   ) { }
 
   async create(createEventDto: CreateEventDto) {
-    const { valveId, intensity, time } = createEventDto;
+    const { valveId, intensity, startTime, endTime } = createEventDto;
     const composeComponent = await this.composeComponentService.findOne(valveId);
-    const event = this.eventRepository.create({ intensity, time, composeComponent });
+    const event = this.eventRepository.create({ intensity, startTime, endTime, composeComponent });
     return await this.eventRepository.save(event);
   }
 
   async createMany(createEventDto: CreateEventDto[]) {
     const events = await Promise.all(createEventDto.map(async event => {
-      const { valveId, intensity, time } = event;
+      const { valveId, intensity, startTime, endTime } = event;
       const composeComponent = await this.composeComponentService.findOne(valveId);
-      const eventEntity = this.eventRepository.create({ intensity, time, composeComponent });
+      const eventEntity = this.eventRepository.create({ intensity, startTime, endTime, composeComponent });
       return eventEntity;
     }));
     return await this.eventRepository.save(events);

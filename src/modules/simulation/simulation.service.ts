@@ -44,7 +44,8 @@ export class SimulationService {
         type: 'simulación',
         events: eventList.map(event => {
           return {
-            time: event.time,
+            startTime: event.startTime,
+            endTime: event.endTime,
             component: event.composeComponent.description,
             intensity: event.intensity
           }

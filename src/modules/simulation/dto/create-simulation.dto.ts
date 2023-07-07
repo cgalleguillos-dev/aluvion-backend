@@ -1,7 +1,8 @@
 interface InputEvent {
     valveId: string;
     intensity: number;
-    time: number;
+    startTime: number;
+    endTime: number;
 }
 export class CreateSimulationDto {
     description: string;

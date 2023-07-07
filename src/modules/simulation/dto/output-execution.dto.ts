@@ -17,7 +17,8 @@ class SimulationOutputExecution {
     type: string;
     events:
         {
-            time: number;
+            startTime: number;
+            endTime: number;
             component: string;
             intensity: number;
         }[]
