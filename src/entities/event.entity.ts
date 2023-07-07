@@ -11,7 +11,10 @@ export class Event {
     intensity: number;
 
     @Column()
-    time: number;
+    startTime: number;
+
+    @Column()
+    endTime: number;
 
     @ManyToOne(type => Simulation, simulation => simulation.eventList)
     simulation: Simulation;
