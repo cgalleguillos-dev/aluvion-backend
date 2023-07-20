@@ -50,6 +50,10 @@ export class BaseEquipmentService {
   async findOne(id: string) {
     return await this.baseEquipmentRepository.findOne({
       where: { id },
+      relations: ['arduinos', 'arduinos.components', 'arduinos.components.typeComponent',
+        'arduinos.components.pins', 'arduinos.composeComponents', 'arduinos.composeComponents.typeComponent',
+        'arduinos.composeComponents.pins', 'arduinos.composeComponents.components',
+      ]
     }
     );
   }
