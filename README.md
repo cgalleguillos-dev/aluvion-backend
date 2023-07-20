@@ -28,10 +28,19 @@
 
 ## Installation
 
+### Local
 ```bash
 $ npm install
+$ npm run m:r ## execute migration
 ```
 
+### Docker
+```bash
+$ docker-compose up --build -d
+
+# luego entrar al docker y ejecutar el comando
+$ npm run m:r ## execute migration
+```
 ## Running the app
 
 ```bash
@@ -44,6 +53,7 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+### This app run in the 3005 port
 
 ## Test
 
