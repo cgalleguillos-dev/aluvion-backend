@@ -67,7 +67,10 @@ export class SimulationService {
 
   async findAll() {
     return await this.simulationRepository.find({
-      relations: ['equipment', 'eventList', 'eventList.composeComponent']
+      relations: ['equipment', 'eventList', 'eventList.composeComponent',
+        'eventList.composeComponent.arduino', 'eventList.composeComponent.pins', 'equipment.baseEquipment',
+        'equipment.baseEquipment.arduinos', 'equipment.composeComponents', 'equipment.composeComponents.pins'
+      ]
     });
   }
 
