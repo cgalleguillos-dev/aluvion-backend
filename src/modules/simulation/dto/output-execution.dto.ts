@@ -1,30 +1,26 @@
 class SetupOutputExecution {
-    type: string;
-    equipment: string;
-    arduinos: string[];
-    components:
-        {
-            description: string;
-            pins:
-            {
-                pin: number;
-                mode: string;
-            }[]
-        }[];
+    arduinos: ArduinoOutputExecution[];
 }
 
 class SimulationOutputExecution {
-    type: string;
-    events:
+    sequence:
         {
-            startTime: number;
-            endTime: number;
-            component: string;
-            intensity: number;
+            arduino: string;
+            time: number;
+            position: number;
         }[]
+}
+
+class ArduinoOutputExecution {
+    id: string;
+    pins: {
+        pin: number;
+        mode: string;
+    }[]
 }
 
 export class OutputExecution {
     setup: SetupOutputExecution;
-    simulation: SimulationOutputExecution;
+    sequence: SimulationOutputExecution;
 }
+

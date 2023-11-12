@@ -16,8 +16,8 @@ export class ArduinoService {
     private composeComponent: ComposeComponentService
   ) { }
   async create(createArduinoDto: CreateArduinoDto) {
-    const { description, components } = createArduinoDto;
-    const arduino = this.arduinoRepository.create({ description });
+    const { id, description, components } = createArduinoDto;
+    const arduino = this.arduinoRepository.create({ id, description });
     if (components) {
       const componentsEntity = await Promise.all(components.map(async component => {
         if (!component.components?.length) {
@@ -46,8 +46,12 @@ export class ArduinoService {
     });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} arduino`;
+  async findOne(id: string) {
+    return await this.arduinoRepository.findOne({
+      where: { id },
+      relations: ['components', 'components.pins', 'composeComponents', 'composeComponents.pins', 'composeComponents.components', 'composeComponents.components.pins'
+      ]
+    })
   }
 
   update(id: string, updateArduinoDto: UpdateArduinoDto) {

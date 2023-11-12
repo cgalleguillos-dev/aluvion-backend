@@ -11,6 +11,7 @@ class CreateArduinoComponentDto {
     components?: CreateArduinoComponentDto[];
 }
 export class CreateArduinoDto {
+    id?: string;
     description: string;
     components: CreateArduinoComponentDto[];
 }

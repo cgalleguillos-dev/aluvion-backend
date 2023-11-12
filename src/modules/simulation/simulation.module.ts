@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Simulation } from '../../entities';
 import { EquipmentModule } from '../equipment/equipment.module';
 import { EventModule } from '../event/event.module';
+import { HttpModule } from '@nestjs/axios';
+import { ArduinoModule } from '../arduino/arduino.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Simulation]), EquipmentModule, EventModule],
+  imports: [TypeOrmModule.forFeature([Simulation]), EquipmentModule, EventModule, HttpModule, ArduinoModule],
   controllers: [SimulationController],
   providers: [SimulationService],
   exports: [SimulationService],

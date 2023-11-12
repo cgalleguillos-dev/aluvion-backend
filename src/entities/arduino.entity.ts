@@ -6,7 +6,9 @@ import { ComposeComponent } from "./compose-component.entity";
 
 @Entity()
 export class Arduino {
-    @PrimaryGeneratedColumn('uuid')
+    @Column({
+        primary: true
+    })
     id: string;
 
     @Column()

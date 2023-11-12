@@ -7,6 +7,10 @@ import { Arduino, ComposeComponent, Equipment, Event, Simulation } from '../../e
 import { EquipmentService } from '../equipment/equipment.service';
 import { EventService } from '../event/event.service';
 import { OutputExecution } from './dto/output-execution.dto';
+import axios from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { ArduinoService } from '../arduino/arduino.service';
+import { ManualExecution } from './dto/manual-execution.dto';
 
 @Injectable()
 export class SimulationService {
@@ -14,40 +18,45 @@ export class SimulationService {
   constructor(
     @InjectRepository(Simulation) private simulationRepository: Repository<Simulation>,
     private equipmentService: EquipmentService,
-    private eventService: EventService
+    private eventService: EventService,
+    private readonly httpService: HttpService,
+    private readonly arduinoService: ArduinoService
   ) { }
 
-  private generateOutputExecution({ equipment, eventList, arduinos, components }: {
-    equipment: Equipment,
+  private generateOutputExecution({ eventList, arduinos, components }: {
     eventList: Event[],
     arduinos: Arduino[],
     components: ComposeComponent[]
   }): OutputExecution {
+
+    eventList.sort((a, b) => a.startTime - b.startTime);
+
     const outputExecution: OutputExecution = {
       setup: {
-        type: 'setup',
-        equipment: equipment.description,
-        arduinos: arduinos.map(arduino => arduino.description),
-        components: components.map(component => {
-          return {
-            description: component.description,
-            pins: component.pins.map(pin => {
-              return {
+        arduinos: arduinos.map(arduino => {
+          const arduinoWithPins = {
+            id: arduino.id,
+            pins: []
+          };
+          const arduinoComponents = components.filter(component => component.arduino.id === arduino.id);
+
+          arduinoComponents.forEach(component => {
+            component.pins.forEach(pin => {
+              arduinoWithPins.pins.push({
                 pin: pin.pinNumber,
-                mode: pin.comunicationType
-              }
-            })
-          }
+                mode: "OUTPUT"
+              });
+            });
+          });
+          return arduinoWithPins;
         })
       },
-      simulation: {
-        type: 'simulación',
-        events: eventList.map(event => {
+      sequence: {
+        sequence: eventList.map(event => {
           return {
-            startTime: event.startTime,
-            endTime: event.endTime,
-            component: event.composeComponent.description,
-            intensity: event.intensity
+            arduino: event.composeComponent.arduino.id,
+            time: event.endTime - event.startTime,
+            position: event.intensity * 10
           }
         }
         )
@@ -74,13 +83,73 @@ export class SimulationService {
     });
   }
 
-  async execute(id: string): Promise<OutputExecution> {
+
+  async manualExecute(manualExecution: ManualExecution) {
+    const { idArduino, idComposeComponent, position } = manualExecution;
+    const arduino = await this.arduinoService.findOne(idArduino);
+    // busca la valvula en el arduino
+    const composeComponent = arduino.composeComponents.find(composeComponent => composeComponent.id === idComposeComponent);
+
+    const outputExecution = {
+      setup: {
+        arduinos: [
+          {
+            id: arduino.id,
+            pins: composeComponent.pins.map(pin => {
+              return {
+                pin: pin.pinNumber,
+                mode: "OUTPUT"
+              }
+            })
+          }
+        ]
+      },
+      sequence: {
+        sequence: [
+          {
+            arduino: arduino.id,
+            time: 10,
+            position: position * 10
+          }
+        ]
+      }
+    }
+    try {
+      const response = await this.httpService.post('http://127.0.0.1:5000/manual-execute', outputExecution).subscribe(
+        (response) => {
+          console.log(response);
+        }
+      );
+      console.log(response);
+      return outputExecution;
+    } catch (error) {
+      console.error('Error sending data to server:', error);
+      throw error;
+    }
+  }
+
+  async execute(id: string) {
     const simulation = await this.findOne(id);
     const equipment = simulation.equipment;
     const eventList = simulation.eventList;
     const arduinos = equipment.baseEquipment.arduinos;
     const components = equipment.composeComponents;
-    return this.generateOutputExecution({ equipment, eventList, arduinos, components });
+    const outputExecution = this.generateOutputExecution({ eventList, arduinos, components });
+    try {
+      const response = await this.httpService.post('http://127.0.0.1:5000/execute', outputExecution).subscribe(
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      console.log(response);
+      return outputExecution;
+    } catch (error) {
+      console.error('Error sending data to server:', error);
+      throw error;
+    }
   }
 
   async findOne(id: string) {
@@ -90,7 +159,7 @@ export class SimulationService {
       },
       relations: ['equipment', 'eventList', 'eventList.composeComponent',
         'eventList.composeComponent.arduino', 'eventList.composeComponent.pins', 'equipment.baseEquipment',
-        'equipment.baseEquipment.arduinos', 'equipment.composeComponents', 'equipment.composeComponents.pins'
+        'equipment.baseEquipment.arduinos', 'equipment.composeComponents', 'equipment.composeComponents.pins', 'equipment.composeComponents.arduino'
       ]
     });
   }

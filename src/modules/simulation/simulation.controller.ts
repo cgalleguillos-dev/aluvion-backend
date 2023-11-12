@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SimulationService } from './simulation.service';
 import { CreateSimulationDto } from './dto/create-simulation.dto';
 import { UpdateSimulationDto } from './dto/update-simulation.dto';
+import { ManualExecution } from './dto/manual-execution.dto';
 
 @Controller('simulation')
 export class SimulationController {
@@ -20,6 +21,11 @@ export class SimulationController {
   @Get(':id/execute')
   async execute(@Param('id') id: string) {
     return await this.simulationService.execute(id);
+  }
+
+  @Post('manual-execute')
+  async manualExecute(@Body() body: ManualExecution) {
+    return await this.simulationService.manualExecute(body);
   }
 
   @Get(':id')

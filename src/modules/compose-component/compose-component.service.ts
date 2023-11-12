@@ -19,7 +19,9 @@ export class ComposeComponentService {
   ) { }
 
   async create(createComposeComponentDto: CreateComposeComponentDto) {
+    console.log(createComposeComponentDto)
     const { description, pins, components, typeComponent } = createComposeComponentDto;
+    console.log(pins)
     const typeComponentEntity = await this.typeComponentService.findOneByDescription(typeComponent);
     const pinsEntity = await Promise.all(pins.map(async pin => {
       const pinEntity = await this.pinService.create(pin);

@@ -16,6 +16,7 @@ class BaseEquipmentArduino {
     components: BaseEquipmentComponent[];
 }
 export class CreateBaseEquipmentDto {
+    id?: string;
     description: string;
     arduinos: BaseEquipmentArduino[];
 }
